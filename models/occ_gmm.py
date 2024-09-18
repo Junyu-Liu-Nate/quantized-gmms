@@ -258,7 +258,8 @@ class DecompositionControl(models_utils.Model):
         save_path = f'assets/checkpoints/spaghetti_airplanes/{output_dir}/codes/'
         if not os.path.exists(f'{save_path}/surface_feats.npy'):
             print("saving new codes")
-            os.makedirs(save_path)
+            if not os.path.exists(save_path): ### TODO: Modified here
+                os.makedirs(save_path)
             np.save(f'{save_path}/surface_feats.npy', zh.detach().cpu().numpy()) #[B, m, d_surface]
         else:
             if options.use_quantized:
@@ -452,7 +453,9 @@ class Spaghetti(models_utils.Model):
             curr_gmm3 = {} #stores gaussian id -> [dim,]
             for priming_shape_idx, part_group_to_borrow in tuple.items():
                 # for this priming shape, copy the chosen group's parts to the output
+                # print(f'zc: {zc}')
                 for gaussian_id in part_groups[part_group_to_borrow]:
+                    # print(f'gaussian_id: {gaussian_id}')
                     composed_shapes_zc[i, gaussian_id] = zc[priming_shape_idx, gaussian_id]
                     curr_gmm0[gaussian_id] = gmms[0][priming_shape_idx, 0, gaussian_id] #[dim,]
                     curr_gmm1[gaussian_id] = gmms[1][priming_shape_idx, 0, gaussian_id] #[dim,]

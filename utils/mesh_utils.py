@@ -2,7 +2,7 @@
 from custom_types import *
 from constants import EPSILON
 from functools import reduce
-import igl
+# import igl
 # import trimesh
 from custom_types import T_Mesh, TS
 
