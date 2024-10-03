@@ -442,13 +442,13 @@ class Inference:
             print(f"tuples_id_to_part_group: {tuples_id_to_part_group}")
             
             ####### For unique tuple dict #######
-            # tuples_id_to_part_group = self.string_to_int_keys(tuples_id_to_part_group)
+            tuples_id_to_part_group = self.string_to_int_keys(tuples_id_to_part_group)
 
             # tuples_id_to_part_group = self.get_canonical_part_group_order(tuples_id_to_part_group)
 
-            # print(f"tuples_id_to_part_group: ")
-            # for tuple in tuples_id_to_part_group:
-            #     print(f"\t{tuple}")
+            print(f"tuples_id_to_part_group: ")
+            for tuple in tuples_id_to_part_group:
+                print(f"\t{tuple}")
             ######################################
         
         zh_base, _, gmms = self.model.get_embeddings(shape_samples.to(self.device), folder_name, tf_sample_dirname) # NOTE: quantized code overrides internally

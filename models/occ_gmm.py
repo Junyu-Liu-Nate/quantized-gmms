@@ -452,13 +452,15 @@ class Spaghetti(models_utils.Model):
             curr_gmm2 = {} #stores gaussian id -> [dim,]
             curr_gmm3 = {} #stores gaussian id -> [dim,]
             ######### When using duplicated entries (multi-retriveval), use list of tuples instead of dict
-            # for priming_shape_idx, part_group_to_borrow in tuple.items():
-            for priming_shape_info in tuple: ### Here the tuple is a list of dict
-                (priming_shape_idx, part_group_to_borrow), = priming_shape_info.items()
-                priming_shape_idx = int(priming_shape_idx)
+            # for priming_shape_idx, part_group_to_borrow in tuple.items(): #### This is original
+            # for priming_shape_info in tuple: ### Here the tuple is a list of dict #### This is designed for multi part groups
+            #     (priming_shape_idx, part_group_to_borrow), = priming_shape_info.items()
+            #     priming_shape_idx = int(priming_shape_idx)
                 # for this priming shape, copy the chosen group's parts to the output
                 # print(f'zc: {zc}')
-                for gaussian_id in part_groups[part_group_to_borrow]:
+            for priming_shape_idx, part_group_to_borrow in tuple.items(): #### This is designed for random part groups
+                # for gaussian_id in part_groups[part_group_to_borrow]: #### This is original
+                for gaussian_id in part_group_to_borrow:
                     # print(f'gaussian_id: {gaussian_id}')
                     composed_shapes_zc[i, gaussian_id] = zc[priming_shape_idx, gaussian_id]
                     curr_gmm0[gaussian_id] = gmms[0][priming_shape_idx, 0, gaussian_id] #[dim,]
