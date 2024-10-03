@@ -213,8 +213,8 @@ class Inference:
         for i, spaghetti_shape_idx in enumerate(fixed_items):
             spaghetti_shape_idx = spaghetti_shape_idx.item()
             print("spag shape idx: ", spaghetti_shape_idx)
-            if i == 10:
-                exit()
+            # if i < 1774:
+            #     continue
             mesh = self.get_mesh(z[spaghetti_shape_idx], res)  # mcubes.  tuple of (V,F)
             # name = f'{fixed_items[i]:04d}' # OLD naming: use latent vec ID
             if options.use_quantized:
@@ -439,29 +439,17 @@ class Inference:
             print("using TF samples from ", tf_sample_dirname)
         
             tuples_id_to_part_group = json.load(open(f"assets/checkpoints/spaghetti_airplanes/{folder_name}/codes/{tf_sample_dirname}/tuples_id_to_part_group.json"))
-            tuples_id_to_part_group = self.string_to_int_keys(tuples_id_to_part_group)
+            print(f"tuples_id_to_part_group: {tuples_id_to_part_group}")
+            
+            ####### For unique tuple dict #######
+            # tuples_id_to_part_group = self.string_to_int_keys(tuples_id_to_part_group)
 
-            tuples_id_to_part_group = self.get_canonical_part_group_order(tuples_id_to_part_group)
+            # tuples_id_to_part_group = self.get_canonical_part_group_order(tuples_id_to_part_group)
 
-            print(f"tuples_id_to_part_group: ")
-            for tuple in tuples_id_to_part_group:
-                print(f"\t{tuple}")
-            # tuples_id_to_part_group = [
-            #     {
-            #         9635: 0,
-            #         3372: 1,
-            #         3953: 2,
-            #         5942: 3,
-            #         4433: 4,
-            #     },
-            #     {
-            #         7792: 0,
-            #         1242: 1,
-            #         5125: 2,
-            #         2042: 3,
-            #         7976: 4,
-            #     }
-            # ]
+            # print(f"tuples_id_to_part_group: ")
+            # for tuple in tuples_id_to_part_group:
+            #     print(f"\t{tuple}")
+            ######################################
         
         zh_base, _, gmms = self.model.get_embeddings(shape_samples.to(self.device), folder_name, tf_sample_dirname) # NOTE: quantized code overrides internally
         zh, attn_b, gmms = self.model.merge_zh(zh_base, gmms, tuples_id_to_part_group=tuples_id_to_part_group)  # z^c [B, m, dim=512]. index into gmms if necessary

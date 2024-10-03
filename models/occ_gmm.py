@@ -451,7 +451,11 @@ class Spaghetti(models_utils.Model):
             curr_gmm1 = {} #stores gaussian id -> [dim,]
             curr_gmm2 = {} #stores gaussian id -> [dim,]
             curr_gmm3 = {} #stores gaussian id -> [dim,]
-            for priming_shape_idx, part_group_to_borrow in tuple.items():
+            ######### When using duplicated entries (multi-retriveval), use list of tuples instead of dict
+            # for priming_shape_idx, part_group_to_borrow in tuple.items():
+            for priming_shape_info in tuple: ### Here the tuple is a list of dict
+                (priming_shape_idx, part_group_to_borrow), = priming_shape_info.items()
+                priming_shape_idx = int(priming_shape_idx)
                 # for this priming shape, copy the chosen group's parts to the output
                 # print(f'zc: {zc}')
                 for gaussian_id in part_groups[part_group_to_borrow]:
