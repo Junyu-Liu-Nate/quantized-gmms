@@ -433,6 +433,11 @@ class Spaghetti(models_utils.Model):
         gmms_2 = []
         gmms_3 = []
 
+        # print(f'zc[:5]: {zc[:5].shape}')
+        # zc_first5 = zc[:5].cpu().numpy()
+        # np.save('zc_first5.npy', zc_first5)  # Saves the array to array.npy
+        # exit()
+
         part_groups = {
             0: [0, 2, 3, 4, 8, 10, 11, 12], #body
             1: [7, 15], # outer wing
