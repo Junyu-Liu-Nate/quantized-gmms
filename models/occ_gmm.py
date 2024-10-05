@@ -467,6 +467,7 @@ class Spaghetti(models_utils.Model):
                 # for gaussian_id in part_groups[part_group_to_borrow]: #### This is original
                 for gaussian_id in part_group_to_borrow:
                     # print(f'gaussian_id: {gaussian_id}')
+                    # print(f'i: {i}, priming_shape_idx: {priming_shape_idx}, gaussian_id: {gaussian_id}')
                     composed_shapes_zc[i, gaussian_id] = zc[priming_shape_idx, gaussian_id]
                     curr_gmm0[gaussian_id] = gmms[0][priming_shape_idx, 0, gaussian_id] #[dim,]
                     curr_gmm1[gaussian_id] = gmms[1][priming_shape_idx, 0, gaussian_id] #[dim,]

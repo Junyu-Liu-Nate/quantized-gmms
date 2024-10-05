@@ -56,6 +56,11 @@ class Inference:
 
     @models_utils.torch_no_grad
     def get_mesh(self, z: T, res: int) -> Optional[T_Mesh]:
+        # z = np.load('./zcs_test_1005.npy')
+        # z = torch.tensor(z).to(self.device)
+        # print(f'z: {z.shape}')
+        # np.save('./zc_spaghetti.npy', z.detach().cpu().numpy())
+        # exit()
         mesh = self.meshing.occ_meshing(self.get_occ_fun(z), res=res)
         return mesh
     
@@ -452,6 +457,32 @@ class Inference:
             ######################################
         
         zh_base, _, gmms = self.model.get_embeddings(shape_samples.to(self.device), folder_name, tf_sample_dirname) # NOTE: quantized code overrides internally
+        # print('gmms shape: ', gmms[0].shape)
+        # print('gmms shape: ', gmms[1].shape)
+        # print('gmms shape: ', gmms[2].shape)
+        # print('gmms shape: ', gmms[3].shape)
+        
+        # mu = gmms[0][0][0].detach().cpu().numpy()
+        # evec = gmms[1][0][0].detach().cpu().numpy()
+        # mw = gmms[2][0].detach().cpu().numpy()
+        # eval0 = gmms[3][0][0].detach().cpu().numpy()
+
+        # print('gmms shape: ', mu.shape)
+        # print('gmms shape: ', evec.shape)
+        # print('gmms shape: ', mw.shape)
+        # print('gmms shape: ', eval0.shape)
+
+        # t1 = np.concatenate((mu, evec.reshape(16, 9)), axis=1)
+        # t2 = np.concatenate((t1, mw.T), axis=1)
+        # t3 = np.concatenate((t2, eval0), axis=1)
+
+        # np.save(f'./gmms.npy', t3)
+
+        # np.save(f'./zh_base_0.npy', zh_base[0].detach().cpu().numpy())
+
+        # exit()
+        ###### Note: save data in here!!!!
+
         zh, attn_b, gmms = self.model.merge_zh(zh_base, gmms, tuples_id_to_part_group=tuples_id_to_part_group)  # z^c [B, m, dim=512]. index into gmms if necessary
         print("zh: ", zh.shape) #== zb
 
