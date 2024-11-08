@@ -210,7 +210,7 @@ class Inference:
 
 
     def plot_occ(self, z: Union[T, TS], z_base, gmms: Optional[TS], fixed_items: T,
-                 folder_name: str, res=200, verbose=True, from_quantized=False, tf_sample_dirname='', attn_weights=None):
+                 folder_name: str, save_names=None, res=200, verbose=True, from_quantized=False, tf_sample_dirname='', attn_weights=None):
         self.load_mesh_names(f'{self.opt.cp_folder}/shapenet_airplanes_train.json')
         
         means, eigenvecs, mix_weights, eigenvals = gmms
@@ -233,6 +233,8 @@ class Inference:
                     name += '_quantized'
             else:
                 name = str(spaghetti_shape_idx+options.recon_sample_offset)
+                if save_names is not None:
+                    name = save_names[i]
                 
             if mesh is not None:
                 # temp: color verts based on gaussian maximimizing likelihood
@@ -440,10 +442,17 @@ class Inference:
             # shape_samples = torch.randint(low=0, high=self.opt.dataset_size, size=(nums_sample,))
             print('using ordered train subset (if no TF samples specified)')
             shape_samples = torch.arange(nums_sample)
+            
         if tf_sample_dirname:
             print("using TF samples from ", tf_sample_dirname)
         
-            tuples_id_to_part_group = json.load(open(f"assets/checkpoints/spaghetti_airplanes/{folder_name}/codes/{tf_sample_dirname}/tuples_id_to_part_group.json"))
+            # tuples_id_to_part_group = json.load(open(f"assets/checkpoints/spaghetti_airplanes/{folder_name}/codes/{tf_sample_dirname}/tuples_id_to_part_group.json"))
+            # print(f"tuples_id_to_part_group: {tuples_id_to_part_group}")
+            ### Note: for tuples_id_to_part_group that contains query keys:
+            tuples_id_to_part_group_raw = json.load(open(f"assets/checkpoints/spaghetti_airplanes/{folder_name}/codes/{tf_sample_dirname}/tuples_id_to_part_group.json"))
+            tuples_id_to_part_group_keys = list(tuples_id_to_part_group_raw.keys()) ### These are save names - query key names
+            tuples_id_to_part_group_keys_samples = tuples_id_to_part_group_keys[:nums_sample]
+            tuples_id_to_part_group = [tuples_id_to_part_group_raw[key] for key in tuples_id_to_part_group_keys]
             print(f"tuples_id_to_part_group: {tuples_id_to_part_group}")
             
             ####### For unique tuple dict #######
@@ -508,7 +517,8 @@ class Inference:
 
         # TEMP: massive recon
         # shape_samples = torch.arange(nums_sample)
-        self.plot_occ(zh, zh_base, gmms, shape_samples, folder_name, verbose=True, res=res, from_quantized=from_quantized, tf_sample_dirname=tf_sample_dirname, attn_weights=attn_weights)
+        # self.plot_occ(zh, zh_base, gmms, shape_samples, folder_name, verbose=True, res=res, from_quantized=from_quantized, tf_sample_dirname=tf_sample_dirname, attn_weights=attn_weights)
+        self.plot_occ(zh, zh_base, gmms, shape_samples, folder_name, save_names=tuples_id_to_part_group_keys_samples, verbose=True, res=res, from_quantized=from_quantized, tf_sample_dirname=tf_sample_dirname, attn_weights=attn_weights)
 
     def get_mesh_from_mid(self, gmm, included: T, res: int) -> Optional[T_Mesh]:
         if self.mid is None:

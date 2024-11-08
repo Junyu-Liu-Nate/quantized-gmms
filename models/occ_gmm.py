@@ -106,10 +106,14 @@ def split_gm(splitted: TS, output_dir='', tf_sample_dirname='', saved_codes_dirn
         splitted = tuple(splitted)
 
     p = get_p_direct(splitted) # 3x3 factorized covariance matrix [B, 1, m, 3,3]
-    print('p:', p.shape)
-    print('eig:', eigen.shape)
-    print('mu:', mu.shape)
-    print('phi:', phi.shape)
+    # print('p:', p.shape) # p shape is [11775, 1, 16, 3, 3]
+    # np.save(f'{save_path}/new_factorized_cov.npy', p.detach().cpu().numpy())
+    # print('eig:', eigen.shape)
+    # np.save(f'{save_path}/new_eigen.npy', eigen.detach().cpu().numpy())
+    # print('mu:', mu.shape)
+    # np.save(f'{save_path}/new_mu.npy', mu.detach().cpu().numpy())
+    # print('phi:', phi.shape)
+    # exit()
 
     return mu, p, phi, eigen
 
@@ -458,12 +462,13 @@ class Spaghetti(models_utils.Model):
             curr_gmm3 = {} #stores gaussian id -> [dim,]
             ######### When using duplicated entries (multi-retriveval), use list of tuples instead of dict
             # for priming_shape_idx, part_group_to_borrow in tuple.items(): #### This is original
-            # for priming_shape_info in tuple: ### Here the tuple is a list of dict #### This is designed for multi part groups
+                # print(f'priming_shape_idx: {priming_shape_idx}, part_group_to_borrow: {part_group_to_borrow}')
+            for priming_shape_info in tuple: ### Here the tuple is a list of dict #### This is designed for multi part groups
             #     (priming_shape_idx, part_group_to_borrow), = priming_shape_info.items()
             #     priming_shape_idx = int(priming_shape_idx)
                 # for this priming shape, copy the chosen group's parts to the output
                 # print(f'zc: {zc}')
-            for priming_shape_idx, part_group_to_borrow in tuple.items(): #### This is designed for random part groups
+            # for priming_shape_idx, part_group_to_borrow in tuple.items(): #### This is designed for random part groups
                 # for gaussian_id in part_groups[part_group_to_borrow]: #### This is original
                 for gaussian_id in part_group_to_borrow:
                     # print(f'gaussian_id: {gaussian_id}')
